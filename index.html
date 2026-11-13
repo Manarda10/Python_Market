@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -136,6 +137,34 @@ function addService(){
  alert("تمت إضافة الخدمة إلى المعاينة بنجاح");
 }
 render();
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const savedServices = JSON.parse(localStorage.getItem("pythonMarketServices") || "[]");
+
+    savedServices.forEach(service => {
+        const card = document.createElement("div");
+        card.className = "service-card";
+        card.innerHTML = `
+            <h3>${service.title}</h3>
+            <p>${service.description}</p>
+            <strong>${service.price}</strong>
+        `;
+
+        const container = document.querySelector(".services-grid");
+        if (container) container.appendChild(card);
+    });
+
+    window.saveMarketService = function (title, description, price) {
+        const services = JSON.parse(localStorage.getItem("pythonMarketServices") || "[]");
+
+        services.push({ title, description, price });
+
+        localStorage.setItem("pythonMarketServices", JSON.stringify(services));
+
+        alert("تم حفظ الخدمة بنجاح!");
+    };
+});
 </script>
 </body>
 </html>
