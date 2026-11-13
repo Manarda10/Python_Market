@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -32,29 +33,17 @@ h2{font-size:23px}
 .price{color:#6654db;font-weight:bold;font-size:19px}
 .card button{width:100%;margin-top:12px}
 footer{text-align:center;padding:30px;background:#24213e;color:#ddd;margin-top:55px}
-.modal{display:none;position:fixed;inset:0;background:#0009;align-items:center;justify-content:center;padding:15px}
-.modal-box{background:white;padding:25px;border-radius:15px;width:100%;max-width:430px}
+.modal{display:none;position:fixed;inset:0;background:#0009;align-items:center;justify-content:center;padding:15px;z-index:1000}
+.modal-box{background:white;padding:25px;border-radius:15px;width:100%;max-width:480px;max-height:85vh;overflow-y:auto}
 .modal input,.modal textarea{width:100%;padding:12px;margin:8px 0 15px;border:1px solid #ddd;border-radius:8px;font:inherit}
-
-/* خدمة العملاء */
-.support{
- text-align:center;
- background:white;
- padding:30px 20px;
- border-radius:15px;
- box-shadow:0 3px 12px #00000008;
-}
+.provider-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid #eee;flex-wrap:wrap}
+.provider-name{font-weight:bold;font-size:14px}
+.provider-role{font-size:12px;color:#888;margin-top:5px}
+.provider-whatsapp{background:#25D366;color:white;text-decoration:none;padding:9px 13px;border-radius:8px;font-size:13px;font-weight:bold;white-space:nowrap}
+.close-btn{background:#eee;color:#333;width:100%;margin-top:18px}
+.support{text-align:center;background:white;padding:30px 20px;border-radius:15px;box-shadow:0 3px 12px #00000008}
 .support p{color:#666;line-height:2}
-.whatsapp-btn{
- display:inline-block;
- background:#25D366;
- color:white;
- text-decoration:none;
- padding:14px 25px;
- border-radius:10px;
- font-weight:bold;
- margin-top:10px;
-}
+.whatsapp-btn{display:inline-block;background:#25D366;color:white;text-decoration:none;padding:14px 25px;border-radius:10px;font-weight:bold;margin-top:10px}
 </style>
 </head>
 <body>
@@ -105,7 +94,6 @@ footer{text-align:center;padding:30px;background:#24213e;color:#ddd;margin-top:5
  </p>
 </section>
 
-<!-- قسم خدمة العملاء الجديد -->
 <section class="container" id="support">
  <div class="support">
   <h2>خدمة العملاء</h2>
@@ -114,13 +102,23 @@ footer{text-align:center;padding:30px;background:#24213e;color:#ddd;margin-top:5
   <p><strong>رقم التواصل: +963 968 064 369</strong></p>
   <a class="whatsapp-btn"
      href="https://wa.me/963968064369"
-     target="_blank"
-     rel="noopener">
+     target="_blank" rel="noopener">
      تواصل معنا عبر واتساب
   </a>
  </div>
 </section>
 
+<!-- نافذة مقدمي الخدمات -->
+<div class="modal" id="providerModal">
+ <div class="modal-box">
+  <h2 id="providerTitle">مقدمو الخدمة</h2>
+  <p class="muted">اختر الشخص الذي ترغب بالتواصل معه:</p>
+  <div id="providerList"></div>
+  <button class="close-btn" onclick="closeProviders()">إغلاق</button>
+ </div>
+</div>
+
+<!-- نافذة إضافة خدمة -->
 <div class="modal" id="modal">
  <div class="modal-box">
   <h2>إضافة خدمة جديدة</h2>
@@ -144,6 +142,28 @@ footer{text-align:center;padding:30px;background:#24213e;color:#ddd;margin-top:5
 <footer>© 2026 Python Market - جميع الحقوق محفوظة</footer>
 
 <script>
+const providers = {
+  0: [
+    {name:"محمد منار الدايه",role:"ديزاينر",phone:"963934903925"},
+    {name:"عثمان الاحمد",role:"مهندس",phone:"963952374995"},
+    {name:"عمر العلي",role:"ديزاينر",phone:"963932596166"},
+    {name:"احمد محفوظ",role:"أستاذ",phone:"963933602002"},
+    {name:"محمود أحمد",role:"ديزاينر",phone:"963933208055"}
+  ],
+  1: [
+    {name:"جورج احمد",role:"مهندس",phone:"963968080806"},
+    {name:"عمر العرندس",role:"مهندس",phone:"963955540289"},
+    {name:"منار محروس",role:"مهندس",phone:"963962951700"}
+  ],
+  2: [
+    {name:"عمر العمر",role:"كاتب",phone:"963940530325"},
+    {name:"ممدوح حنا",role:"كاتب",phone:"963984583577"}
+  ],
+  3: [
+    {name:"عبد القادر الدايه",role:"إدارة صفحات التواصل",phone:"46762888224"}
+  ]
+};
+
 let services=[
  {name:"تصميم شعار احترافي",category:"تصميم",price:15,description:"تصميم شعار مميز لهويتك التجارية",icon:"🎨"},
  {name:"إنشاء موقع إلكتروني",category:"برمجة",price:50,description:"إنشاء موقع عصري ومتجاوب",icon:"💻"},
@@ -156,31 +176,27 @@ let selected="الكل";
 function render(){
  let q=document.getElementById("search").value.trim().toLowerCase();
 
- let list=services.filter(s=>
-  (selected==="الكل"||s.category===selected)&&
-  (s.name+" "+s.description+" "+s.category).toLowerCase().includes(q)
+ let list=services.map((s,index)=>({s,index})).filter(item=>
+  (selected==="الكل"||item.s.category===selected)&&
+  (item.s.name+" "+item.s.description+" "+item.s.category).toLowerCase().includes(q)
  );
 
- document.getElementById("cards").innerHTML=list.map(s=>`
+ document.getElementById("cards").innerHTML=list.map(item=>`
  <article class="card">
-  <div class="cover">${s.icon||"⭐"}</div>
+  <div class="cover">${item.s.icon||"⭐"}</div>
   <div class="info">
-   <span class="muted">${escapeHTML(s.category)}</span>
-   <h3>${escapeHTML(s.name)}</h3>
-   <p class="muted">${escapeHTML(s.description)}</p>
-   <div class="price">$${s.price}</div>
-   <button onclick="alert('سيتم تفعيل طلب الخدمات في المرحلة القادمة')">اطلب الخدمة</button>
+   <span class="muted">${escapeHTML(item.s.category)}</span>
+   <h3>${escapeHTML(item.s.name)}</h3>
+   <p class="muted">${escapeHTML(item.s.description)}</p>
+   <div class="price">$${item.s.price}</div>
+   <button onclick="openProviders(${item.index})">اطلب الخدمة</button>
   </div>
  </article>`).join("")||"<p>لا توجد خدمات مطابقة للبحث.</p>";
 }
 
 function escapeHTML(s){
  return String(s).replace(/[&<>"']/g,c=>({
-  "&":"&amp;",
-  "<":"&lt;",
-  ">":"&gt;",
-  '"':"&quot;",
-  "'":"&#39;"
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
  }[c]));
 }
 
@@ -189,6 +205,32 @@ function filter(c,b){
  document.querySelectorAll(".categories button").forEach(x=>x.classList.remove("active"));
  b.classList.add("active");
  render();
+}
+
+function openProviders(index){
+ const service=services[index];
+ const list=providers[index]||[];
+
+ document.getElementById("providerTitle").textContent=service.name;
+ document.getElementById("providerList").innerHTML=list.map(p=>`
+  <div class="provider-item">
+   <div>
+    <div class="provider-name">${escapeHTML(p.name)}</div>
+    <div class="provider-role">${escapeHTML(p.role)}</div>
+   </div>
+   <a class="provider-whatsapp"
+      href="https://wa.me/${p.phone}"
+      target="_blank" rel="noopener">
+      تواصل عبر واتساب
+   </a>
+  </div>
+ `).join("");
+
+ document.getElementById("providerModal").style.display="flex";
+}
+
+function closeProviders(){
+ document.getElementById("providerModal").style.display="none";
 }
 
 function openModal(){
