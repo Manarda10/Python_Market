@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -36,12 +35,38 @@ footer{text-align:center;padding:30px;background:#24213e;color:#ddd;margin-top:5
 .modal{display:none;position:fixed;inset:0;background:#0009;align-items:center;justify-content:center;padding:15px}
 .modal-box{background:white;padding:25px;border-radius:15px;width:100%;max-width:430px}
 .modal input,.modal textarea{width:100%;padding:12px;margin:8px 0 15px;border:1px solid #ddd;border-radius:8px;font:inherit}
+
+/* خدمة العملاء */
+.support{
+ text-align:center;
+ background:white;
+ padding:30px 20px;
+ border-radius:15px;
+ box-shadow:0 3px 12px #00000008;
+}
+.support p{color:#666;line-height:2}
+.whatsapp-btn{
+ display:inline-block;
+ background:#25D366;
+ color:white;
+ text-decoration:none;
+ padding:14px 25px;
+ border-radius:10px;
+ font-weight:bold;
+ margin-top:10px;
+}
 </style>
 </head>
 <body>
+
 <header>
  <div class="logo">Python <span>Market</span></div>
- <nav><a href="#">الرئيسية</a><a href="#services">الخدمات</a><a href="#about">عن المنصة</a></nav>
+ <nav>
+  <a href="#">الرئيسية</a>
+  <a href="#services">الخدمات</a>
+  <a href="#about">عن المنصة</a>
+  <a href="#support">خدمة العملاء</a>
+ </nav>
  <button onclick="alert('سيتم تفعيل تسجيل الحسابات بالمرحلة القادمة')">تسجيل الدخول</button>
 </header>
 
@@ -63,16 +88,37 @@ footer{text-align:center;padding:30px;background:#24213e;color:#ddd;margin-top:5
   <button onclick="filter('كتابة',this)">الكتابة والترجمة</button>
   <button onclick="filter('تسويق',this)">التسويق</button>
  </div>
+
  <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:18px">
   <span class="muted">خدمات متنوعة يقدمها المستقلون</span>
   <button onclick="openModal()">+ أضف خدمتك</button>
  </div>
+
  <div class="cards" id="cards"></div>
 </main>
 
 <section class="container" id="about">
  <h2>عن Python Market</h2>
- <p style="line-height:2;color:#666">منصة تجمع أصحاب الخدمات الرقمية مع العملاء في مكان واحد، وتساعد المستقلين على عرض مهاراتهم والوصول إلى فرص جديدة.</p>
+ <p style="line-height:2;color:#666">
+ منصة تجمع أصحاب الخدمات الرقمية مع العملاء في مكان واحد،
+ وتساعد المستقلين على عرض مهاراتهم والوصول إلى فرص جديدة.
+ </p>
+</section>
+
+<!-- قسم خدمة العملاء الجديد -->
+<section class="container" id="support">
+ <div class="support">
+  <h2>خدمة العملاء</h2>
+  <p>هل لديك استفسار أو تحتاج إلى مساعدة؟<br>
+  نحن هنا لمساعدتك، تواصل معنا مباشرة عبر واتساب.</p>
+  <p><strong>رقم التواصل: +963 968 064 369</strong></p>
+  <a class="whatsapp-btn"
+     href="https://wa.me/963968064369"
+     target="_blank"
+     rel="noopener">
+     تواصل معنا عبر واتساب
+  </a>
+ </div>
 </section>
 
 <div class="modal" id="modal">
@@ -80,12 +126,16 @@ footer{text-align:center;padding:30px;background:#24213e;color:#ddd;margin-top:5
   <h2>إضافة خدمة جديدة</h2>
   <label>اسم الخدمة</label>
   <input id="name" placeholder="مثلاً: تصميم شعار احترافي">
+
   <label>التصنيف</label>
   <input id="category" placeholder="تصميم أو برمجة أو كتابة أو تسويق">
+
   <label>السعر بالدولار</label>
   <input id="price" type="number" min="1" placeholder="مثلاً 10">
+
   <label>وصف الخدمة</label>
   <textarea id="description" placeholder="اكتب تفاصيل خدمتك..." rows="3"></textarea>
+
   <button onclick="addService()">نشر الخدمة</button>
   <button style="background:#eee;color:#333" onclick="closeModal()">إلغاء</button>
  </div>
@@ -100,15 +150,22 @@ let services=[
  {name:"كتابة مقالات حصرية",category:"كتابة",price:10,description:"كتابة محتوى عربي منسق",icon:"✍️"},
  {name:"إدارة صفحات التواصل",category:"تسويق",price:25,description:"إدارة حسابات التواصل الاجتماعي",icon:"📱"}
 ];
+
 let selected="الكل";
+
 function render(){
  let q=document.getElementById("search").value.trim().toLowerCase();
- let list=services.filter(s=>(selected==="الكل"||s.category===selected)&&(s.name+" "+s.description+" "+s.category).toLowerCase().includes(q));
+
+ let list=services.filter(s=>
+  (selected==="الكل"||s.category===selected)&&
+  (s.name+" "+s.description+" "+s.category).toLowerCase().includes(q)
+ );
+
  document.getElementById("cards").innerHTML=list.map(s=>`
  <article class="card">
   <div class="cover">${s.icon||"⭐"}</div>
   <div class="info">
-   <span class="muted">${s.category}</span>
+   <span class="muted">${escapeHTML(s.category)}</span>
    <h3>${escapeHTML(s.name)}</h3>
    <p class="muted">${escapeHTML(s.description)}</p>
    <div class="price">$${s.price}</div>
@@ -116,55 +173,51 @@ function render(){
   </div>
  </article>`).join("")||"<p>لا توجد خدمات مطابقة للبحث.</p>";
 }
+
 function escapeHTML(s){
- return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+ return String(s).replace(/[&<>"']/g,c=>({
+  "&":"&amp;",
+  "<":"&lt;",
+  ">":"&gt;",
+  '"':"&quot;",
+  "'":"&#39;"
+ }[c]));
 }
+
 function filter(c,b){
  selected=c;
  document.querySelectorAll(".categories button").forEach(x=>x.classList.remove("active"));
- b.classList.add("active");render();
+ b.classList.add("active");
+ render();
 }
-function openModal(){document.getElementById("modal").style.display="flex"}
-function closeModal(){document.getElementById("modal").style.display="none"}
+
+function openModal(){
+ document.getElementById("modal").style.display="flex";
+}
+
+function closeModal(){
+ document.getElementById("modal").style.display="none";
+}
+
 function addService(){
  let name=document.getElementById("name").value.trim();
  let category=document.getElementById("category").value.trim();
  let price=Number(document.getElementById("price").value);
  let description=document.getElementById("description").value.trim();
- if(!name||!category||!price||price<1||!description){alert("يرجى تعبئة جميع الحقول بشكل صحيح");return}
+
+ if(!name||!category||!price||price<1||!description){
+  alert("يرجى تعبئة جميع الحقول بشكل صحيح");
+  return;
+ }
+
  services.unshift({name,category,price,description,icon:"⭐"});
- closeModal();render();
+ closeModal();
+ render();
  alert("تمت إضافة الخدمة إلى المعاينة بنجاح");
 }
+
 render();
 </script>
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    const savedServices = JSON.parse(localStorage.getItem("pythonMarketServices") || "[]");
 
-    savedServices.forEach(service => {
-        const card = document.createElement("div");
-        card.className = "service-card";
-        card.innerHTML = `
-            <h3>${service.title}</h3>
-            <p>${service.description}</p>
-            <strong>${service.price}</strong>
-        `;
-
-        const container = document.querySelector(".services-grid");
-        if (container) container.appendChild(card);
-    });
-
-    window.saveMarketService = function (title, description, price) {
-        const services = JSON.parse(localStorage.getItem("pythonMarketServices") || "[]");
-
-        services.push({ title, description, price });
-
-        localStorage.setItem("pythonMarketServices", JSON.stringify(services));
-
-        alert("تم حفظ الخدمة بنجاح!");
-    };
-});
-</script>
 </body>
 </html>
