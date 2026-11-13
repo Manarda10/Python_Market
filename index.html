@@ -260,6 +260,179 @@ function addService(){
 
 render();
 </script>
+<style>
+#authModal {
+  display:none; position:fixed; inset:0; z-index:99999;
+  background:#0009; justify-content:center; align-items:center;
+  padding:15px; direction:rtl;
+}
+#authModal .auth-box {
+  background:white; padding:22px; border-radius:15px;
+  width:100%; max-width:400px; max-height:90vh; overflow:auto;
+}
+#authModal input {
+  display:block; width:100%; box-sizing:border-box;
+  padding:12px; margin:9px 0; border:1px solid #ddd;
+  border-radius:8px; font-size:15px;
+}
+#authModal button {
+  width:100%; padding:12px; margin-top:8px;
+  border:0; border-radius:8px; cursor:pointer;
+}
+#authSubmit { background:#b8860b; color:white; }
+</style>
 
+<div id="authModal">
+  <div class="auth-box">
+    <h2 id="authTitle">إنشاء حساب جديد</h2>
+
+    <div id="registerFields">
+      <input id="regName" placeholder="الاسم الكامل">
+      <input id="regAddress" placeholder="العنوان">
+      <input id="regEmail" type="email" placeholder="البريد الإلكتروني">
+      <input id="regCountry" placeholder="بلد الإقامة">
+      <input id="regPhone" placeholder="رقم التواصل">
+      <input id="regPassword" type="password" placeholder="كلمة المرور">
+      <input id="regConfirm" type="password" placeholder="تأكيد كلمة المرور">
+    </div>
+
+    <div id="loginFields" style="display:none">
+      <input id="loginEmail" type="email" placeholder="البريد الإلكتروني">
+      <input id="loginPassword" type="password" placeholder="كلمة المرور">
+    </div>
+
+    <button id="authSubmit">إنشاء الحساب</button>
+    <p id="authMessage"></p>
+
+    <p style="text-align:center">
+      <a href="#" id="switchAuth">لديك حساب؟ تسجيل الدخول</a>
+    </p>
+
+    <button id="closeAuth" style="background:#eee">إغلاق</button>
+  </div>
+</div>
+
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  let registering = true;
+
+  function openAuth() {
+    $("authModal").style.display = "flex";
+    $("authMessage").textContent = "";
+  }
+
+  function closeAuth() {
+    $("authModal").style.display = "none";
+  }
+
+  // ربط زر تسجيل الدخول الموجود بالموقع
+  document.querySelectorAll("button, a").forEach(btn => {
+    if (btn.textContent.trim().includes("تسجيل الدخول")) {
+      btn.addEventListener("click", e => {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        openAuth();
+      }, true);
+    }
+  });
+
+  $("closeAuth").onclick = closeAuth;
+
+  $("switchAuth").onclick = e => {
+    e.preventDefault();
+    registering = !registering;
+
+    $("registerFields").style.display = registering ? "block" : "none";
+    $("loginFields").style.display = registering ? "none" : "block";
+    $("authTitle").textContent = registering ? "إنشاء حساب جديد" : "تسجيل الدخول";
+    $("authSubmit").textContent = registering ? "إنشاء الحساب" : "دخول";
+    $("switchAuth").textContent = registering
+      ? "لديك حساب؟ تسجيل الدخول"
+      : "ليس لديك حساب؟ إنشاء حساب";
+    $("authMessage").textContent = "";
+  };
+
+  async function hashPassword(password, salt) {
+    const key = await crypto.subtle.importKey(
+      "raw", new TextEncoder().encode(password),
+      "PBKDF2", false, ["deriveBits"]
+    );
+
+    const result = await crypto.subtle.deriveBits({
+      name: "PBKDF2",
+      salt: new TextEncoder().encode(salt),
+      iterations: 100000,
+      hash: "SHA-256"
+    }, key, 256);
+
+    return [...new Uint8Array(result)]
+      .map(x => x.toString(16).padStart(2, "0")).join("");
+  }
+
+  $("authSubmit").onclick = async () => {
+    const msg = $("authMessage");
+    msg.style.color = "red";
+
+    let users = JSON.parse(localStorage.getItem("pythonMarketUsers") || "[]");
+
+    if (registering) {
+      const name = $("regName").value.trim();
+      const address = $("regAddress").value.trim();
+      const email = $("regEmail").value.trim().toLowerCase();
+      const country = $("regCountry").value.trim();
+      const phone = $("regPhone").value.trim();
+      const password = $("regPassword").value;
+      const confirm = $("regConfirm").value;
+
+      if (!name || !address || !email || !country || !phone || !password || !confirm) {
+        msg.textContent = "يرجى تعبئة جميع الحقول";
+        return;
+      }
+
+      if (password.length < 8) {
+        msg.textContent = "كلمة المرور يجب أن تكون 8 أحرف على الأقل";
+        return;
+      }
+
+      if (password !== confirm) {
+        msg.textContent = "كلمتا المرور غير متطابقتين";
+        return;
+      }
+
+      if (users.some(u => u.email === email)) {
+        msg.textContent = "هذا البريد مسجل مسبقاً";
+        return;
+      }
+
+      const salt = crypto.randomUUID();
+      const passwordHash = await hashPassword(password, salt);
+
+      users.push({name, address, email, country, phone, salt, passwordHash});
+      localStorage.setItem("pythonMarketUsers", JSON.stringify(users));
+
+      msg.style.color = "green";
+      msg.textContent = "تم إنشاء الحساب بنجاح!";
+    } else {
+      const email = $("loginEmail").value.trim().toLowerCase();
+      const password = $("loginPassword").value;
+      const user = users.find(u => u.email === email);
+
+      if (!user || await hashPassword(password, user.salt) !== user.passwordHash) {
+        msg.textContent = "البريد أو كلمة المرور غير صحيحة";
+        return;
+      }
+
+      localStorage.setItem("pythonMarketCurrentUser", JSON.stringify({
+        name: user.name,
+        email: user.email
+      }));
+
+      msg.style.color = "green";
+      msg.textContent = "أهلاً " + user.name + "، تم تسجيل الدخول بنجاح!";
+    }
+  };
+})();
+</script>
 </body>
 </html>
