@@ -1,116 +1,248 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Python Market | سوق الخدمات الرقمية</title>
+<title>Python Market</title>
+
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Tahoma,Arial,sans-serif;background:#f6f7fb;color:#20243a}
-header{background:#fff;padding:18px 7%;display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap;box-shadow:0 2px 12px #0000000b}
+button{border:0;border-radius:9px;padding:12px 18px;background:#6654db;color:white;font-weight:bold;cursor:pointer}
+button:hover{opacity:.88}
+input,textarea{font-family:inherit}
+.hidden{display:none!important}
+
+/* صفحة تسجيل الدخول */
+.auth-page{
+ min-height:100vh;display:flex;align-items:center;justify-content:center;
+ padding:20px;background:linear-gradient(130deg,#29235f,#705ce8)
+}
+.auth-card{
+ background:white;width:100%;max-width:430px;padding:28px;
+ border-radius:18px;box-shadow:0 15px 45px #0002
+}
+.auth-logo{text-align:center;font-size:29px;font-weight:bold;color:#6654db;margin-bottom:8px}
+.auth-sub{text-align:center;color:#888;font-size:14px;margin-bottom:24px}
+.auth-tabs{display:flex;gap:8px;margin-bottom:20px}
+.auth-tabs button{flex:1;background:#eeeaff;color:#6654db}
+.auth-tabs button.active{background:#6654db;color:white}
+.auth-card input{
+ width:100%;padding:13px;margin:7px 0 13px;
+ border:1px solid #ddd;border-radius:8px;font-size:14px
+}
+.auth-card label{font-size:13px;font-weight:bold}
+.auth-submit{width:100%;margin-top:10px}
+.auth-message{text-align:center;font-size:13px;line-height:1.7;margin-top:12px}
+
+/* الموقع */
+header{
+ background:white;padding:18px 7%;display:flex;align-items:center;
+ justify-content:space-between;gap:15px;flex-wrap:wrap;
+ box-shadow:0 2px 12px #0000000b
+}
 .logo{font-size:25px;font-weight:bold;color:#6654db}
 .logo span{color:#20243a}
 nav a{margin:0 10px;color:#555;text-decoration:none;font-size:14px}
-button{border:0;border-radius:9px;padding:12px 18px;background:#6654db;color:white;font-weight:bold;cursor:pointer}
-button:hover{opacity:.88}
-.hero{background:linear-gradient(120deg,#29235f,#705ce8);color:white;text-align:center;padding:65px 20px}
-.hero h1{font-size:34px;margin:0 0 15px}
-.hero p{color:#e3dfff;font-size:17px}
-.search{max-width:600px;margin:25px auto 0;display:flex;background:white;border-radius:10px;padding:6px}
+.header-actions{display:flex;gap:8px;align-items:center}
+.logout{background:#eee;color:#444}
+.hero{
+ background:linear-gradient(120deg,#29235f,#705ce8);
+ color:white;text-align:center;padding:60px 20px
+}
+.hero h1{font-size:32px;margin:0 0 15px}
+.hero p{color:#e3dfff;font-size:16px;line-height:1.8}
+.welcome{
+ background:#fff;padding:18px 22px;border-radius:12px;
+ margin:25px auto 0;max-width:750px;color:#333;
+ box-shadow:0 3px 15px #0001
+}
+.welcome h2{color:#6654db;margin:0 0 8px;font-size:21px}
+.welcome p{color:#666;margin:0;font-size:14px}
+.search{
+ max-width:600px;margin:25px auto 0;display:flex;
+ background:white;border-radius:10px;padding:6px
+}
 .search input{flex:1;min-width:0;border:0;outline:0;padding:12px;font-size:15px}
 .container{max-width:1150px;margin:35px auto;padding:0 18px}
-h2{font-size:23px}
+.container h2{font-size:23px}
 .categories{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0}
 .categories button{background:#eeeaff;color:#5544bd}
 .categories button.active{background:#6654db;color:white}
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
-.card{background:white;border-radius:13px;overflow:hidden;border:1px solid #eee;box-shadow:0 3px 12px #00000008}
-.cover{height:125px;background:linear-gradient(135deg,#e8e4ff,#d8efff);display:grid;place-items:center;font-size:42px}
+.card{
+ background:white;border-radius:13px;overflow:hidden;
+ border:1px solid #eee;box-shadow:0 3px 12px #00000008
+}
+.cover{
+ height:125px;background:linear-gradient(135deg,#e8e4ff,#d8efff);
+ display:grid;place-items:center;font-size:42px
+}
 .info{padding:17px}
 .info h3{font-size:17px;line-height:1.6}
 .muted{color:#888;font-size:13px}
 .price{color:#6654db;font-weight:bold;font-size:19px}
 .card button{width:100%;margin-top:12px}
+.support{
+ text-align:center;background:white;padding:30px 20px;
+ border-radius:15px;box-shadow:0 3px 12px #00000008
+}
+.support p{color:#666;line-height:2}
+.whatsapp-btn{
+ display:inline-block;background:#25D366;color:white;
+ text-decoration:none;padding:14px 25px;border-radius:10px;
+ font-weight:bold;margin-top:10px
+}
 footer{text-align:center;padding:30px;background:#24213e;color:#ddd;margin-top:55px}
-.modal{display:none;position:fixed;inset:0;background:#0009;align-items:center;justify-content:center;padding:15px;z-index:1000}
-.modal-box{background:white;padding:25px;border-radius:15px;width:100%;max-width:480px;max-height:85vh;overflow-y:auto}
-.modal input,.modal textarea{width:100%;padding:12px;margin:8px 0 15px;border:1px solid #ddd;border-radius:8px;font:inherit}
-.provider-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid #eee;flex-wrap:wrap}
+.modal{
+ display:none;position:fixed;inset:0;background:#0009;
+ align-items:center;justify-content:center;padding:15px;z-index:1000
+}
+.modal-box{
+ background:white;padding:25px;border-radius:15px;
+ width:100%;max-width:480px;max-height:85vh;overflow-y:auto
+}
+.modal input,.modal textarea{
+ width:100%;padding:12px;margin:8px 0 15px;
+ border:1px solid #ddd;border-radius:8px;font:inherit
+}
+.provider-item{
+ display:flex;align-items:center;justify-content:space-between;
+ gap:12px;padding:13px 0;border-bottom:1px solid #eee;flex-wrap:wrap
+}
 .provider-name{font-weight:bold;font-size:14px}
 .provider-role{font-size:12px;color:#888;margin-top:5px}
-.provider-whatsapp{background:#25D366;color:white;text-decoration:none;padding:9px 13px;border-radius:8px;font-size:13px;font-weight:bold;white-space:nowrap}
+.provider-whatsapp{
+ background:#25D366;color:white;text-decoration:none;
+ padding:9px 13px;border-radius:8px;font-size:13px;font-weight:bold
+}
 .close-btn{background:#eee;color:#333;width:100%;margin-top:18px}
-.support{text-align:center;background:white;padding:30px 20px;border-radius:15px;box-shadow:0 3px 12px #00000008}
-.support p{color:#666;line-height:2}
-.whatsapp-btn{display:inline-block;background:#25D366;color:white;text-decoration:none;padding:14px 25px;border-radius:10px;font-weight:bold;margin-top:10px}
-
-/* نافذة تسجيل الدخول */
-#authModal{display:none;position:fixed;inset:0;z-index:99999;background:#0009;justify-content:center;align-items:center;padding:15px;direction:rtl}
-#authModal .auth-box{background:white;padding:22px;border-radius:15px;width:100%;max-width:400px;max-height:90vh;overflow:auto}
-#authModal input{display:block;width:100%;box-sizing:border-box;padding:12px;margin:9px 0;border:1px solid #ddd;border-radius:8px;font-size:15px}
-#authModal button{width:100%;padding:12px;margin-top:8px;border:0;border-radius:8px;cursor:pointer}
-#authSubmit{background:#b8860b;color:white}
+@media(max-width:600px){
+ header{padding:15px}
+ nav{width:100%;display:flex;justify-content:center;flex-wrap:wrap;gap:8px}
+ nav a{margin:4px}
+ .hero h1{font-size:25px}
+}
 </style>
 </head>
+
 <body>
 
-<header>
- <div class="logo">Python <span>Market</span></div>
- <nav>
-  <a href="#">الرئيسية</a>
-  <a href="#services">الخدمات</a>
-  <a href="#about">عن المنصة</a>
-  <a href="#support">خدمة العملاء</a>
- </nav>
- <button onclick="openAuth()">تسجيل الدخول</button>
-</header>
+<!-- صفحة الدخول -->
+<section id="authPage" class="auth-page">
+ <div class="auth-card">
+  <div class="auth-logo">Python Market</div>
+  <div class="auth-sub">مرحباً بك في سوق الخدمات الرقمية</div>
 
-<section class="hero">
- <h1>كل الخدمات الرقمية بمكان واحد</h1>
- <p>اكتشف المواهب، اعرض خدماتك، وابدأ رحلتك الرقمية معنا.</p>
- <div class="search">
-  <input id="search" placeholder="ابحث عن الخدمة التي تريدها..." oninput="render()">
-  <button onclick="render()">بحث</button>
+  <div class="auth-tabs">
+   <button id="loginTab" class="active" type="button">تسجيل الدخول</button>
+   <button id="registerTab" type="button">إنشاء حساب</button>
+  </div>
+
+  <form id="loginForm">
+   <label>البريد الإلكتروني</label>
+   <input id="loginEmail" type="email" placeholder="أدخل بريدك الإلكتروني" required>
+   <label>كلمة المرور</label>
+   <input id="loginPassword" type="password" placeholder="أدخل كلمة المرور" required>
+   <button class="auth-submit" type="submit">تسجيل الدخول</button>
+  </form>
+
+  <form id="registerForm" class="hidden">
+   <label>الاسم الكامل</label>
+   <input id="regName" placeholder="الاسم الكامل" required>
+   <label>العنوان</label>
+   <input id="regAddress" placeholder="العنوان" required>
+   <label>البريد الإلكتروني</label>
+   <input id="regEmail" type="email" placeholder="البريد الإلكتروني" required>
+   <label>بلد الإقامة</label>
+   <input id="regCountry" placeholder="بلد الإقامة" required>
+   <label>رقم التواصل</label>
+   <input id="regPhone" placeholder="رقم الهاتف" required>
+   <label>كلمة المرور</label>
+   <input id="regPassword" type="password" minlength="8" placeholder="8 أحرف على الأقل" required>
+   <label>تأكيد كلمة المرور</label>
+   <input id="regConfirm" type="password" minlength="8" placeholder="أعد كتابة كلمة المرور" required>
+   <button class="auth-submit" type="submit">إنشاء الحساب والدخول</button>
+  </form>
+
+  <div id="authMessage" class="auth-message"></div>
  </div>
 </section>
 
-<main class="container" id="services">
- <h2>تصفح الخدمات</h2>
- <div class="categories">
-  <button class="active" onclick="filter('الكل',this)">الكل</button>
-  <button onclick="filter('تصميم',this)">التصميم</button>
-  <button onclick="filter('برمجة',this)">البرمجة</button>
-  <button onclick="filter('كتابة',this)">الكتابة والترجمة</button>
-  <button onclick="filter('تسويق',this)">التسويق</button>
- </div>
+<!-- الموقع بعد تسجيل الدخول -->
+<div id="appPage" class="hidden">
 
- <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:18px">
-  <span class="muted">خدمات متنوعة يقدمها المستقلون</span>
-  <button onclick="openModal()">+ أضف خدمتك</button>
- </div>
+ <header>
+  <div class="logo">Python <span>Market</span></div>
+  <nav>
+   <a href="#home">الرئيسية</a>
+   <a href="#services">الخدمات</a>
+   <a href="#about">عن المنصة</a>
+   <a href="#support">خدمة العملاء</a>
+  </nav>
+  <div class="header-actions">
+   <span id="headerUser" class="muted"></span>
+   <button class="logout" onclick="logout()">تسجيل الخروج</button>
+  </div>
+ </header>
 
- <div class="cards" id="cards"></div>
-</main>
+ <section class="hero" id="home">
+  <h1>كل الخدمات الرقمية بمكان واحد</h1>
+  <p>اكتشف المواهب، اعرض خدماتك، وابدأ رحلتك الرقمية معنا.</p>
 
-<section class="container" id="about">
- <h2>عن Python Market</h2>
- <p style="line-height:2;color:#666">
- منصة تجمع أصحاب الخدمات الرقمية مع العملاء في مكان واحد،
- وتساعد المستقلين على عرض مهاراتهم والوصول إلى فرص جديدة.
- </p>
-</section>
+  <div class="welcome">
+   <h2 id="welcomeTitle">أهلاً وسهلاً بك في Python Market! 👋</h2>
+   <p>يسعدنا انضمامك إلى منصتنا. اكتشف الخدمات الرقمية وتواصل مع أصحاب الخبرات، أو ابدأ بعرض خدماتك الخاصة.</p>
+  </div>
 
-<section class="container" id="support">
- <div class="support">
-  <h2>خدمة العملاء</h2>
-  <p>هل لديك استفسار أو تحتاج إلى مساعدة؟<br>
-  نحن هنا لمساعدتك، تواصل معنا مباشرة عبر واتساب.</p>
-  <p><strong>رقم التواصل: +963 968 064 369</strong></p>
-  <a class="whatsapp-btn" href="https://wa.me/963968064369" target="_blank" rel="noopener">
-     تواصل معنا عبر واتساب
-  </a>
- </div>
-</section>
+  <div class="search">
+   <input id="search" placeholder="ابحث عن الخدمة التي تريدها..." oninput="render()">
+   <button onclick="render()">بحث</button>
+  </div>
+ </section>
+
+ <main class="container" id="services">
+  <h2>تصفح الخدمات</h2>
+
+  <div class="categories">
+   <button class="active" onclick="filter('الكل',this)">الكل</button>
+   <button onclick="filter('تصميم',this)">التصميم</button>
+   <button onclick="filter('برمجة',this)">البرمجة</button>
+   <button onclick="filter('كتابة',this)">الكتابة والترجمة</button>
+   <button onclick="filter('تسويق',this)">التسويق</button>
+  </div>
+
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:18px">
+   <span class="muted">خدمات متنوعة يقدمها المستقلون</span>
+   <button onclick="openModal()">+ أضف خدمتك</button>
+  </div>
+
+  <div class="cards" id="cards"></div>
+ </main>
+
+ <section class="container" id="about">
+  <h2>عن Python Market</h2>
+  <p style="line-height:2;color:#666">
+   منصة تجمع أصحاب الخدمات الرقمية مع العملاء في مكان واحد،
+   وتساعد المستقلين على عرض مهاراتهم والوصول إلى فرص جديدة.
+  </p>
+ </section>
+
+ <section class="container" id="support">
+  <div class="support">
+   <h2>خدمة العملاء</h2>
+   <p>هل لديك استفسار أو تحتاج إلى مساعدة؟<br>
+   نحن هنا لمساعدتك، تواصل معنا مباشرة عبر واتساب.</p>
+   <p><strong>رقم التواصل: +963 968 064 369</strong></p>
+   <a class="whatsapp-btn" href="https://wa.me/963968064369" target="_blank" rel="noopener">
+    تواصل معنا عبر واتساب
+   </a>
+  </div>
+ </section>
+
+ <footer>© 2026 Python Market - جميع الحقوق محفوظة</footer>
+</div>
 
 <!-- نافذة مقدمي الخدمات -->
 <div class="modal" id="providerModal">
@@ -123,60 +255,24 @@ footer{text-align:center;padding:30px;background:#24213e;color:#ddd;margin-top:5
 </div>
 
 <!-- نافذة إضافة خدمة -->
-<div class="modal" id="modal">
+<div class="modal" id="serviceModal">
  <div class="modal-box">
   <h2>إضافة خدمة جديدة</h2>
   <label>اسم الخدمة</label>
-  <input id="name" placeholder="مثلاً: تصميم شعار احترافي">
-
+  <input id="serviceName" placeholder="مثلاً: تصميم شعار احترافي">
   <label>التصنيف</label>
-  <input id="category" placeholder="تصميم أو برمجة أو كتابة أو تسويق">
-
+  <input id="serviceCategory" placeholder="تصميم أو برمجة أو كتابة أو تسويق">
   <label>السعر بالدولار</label>
-  <input id="price" type="number" min="1" placeholder="مثلاً 10">
-
+  <input id="servicePrice" type="number" min="1" placeholder="مثلاً 10">
   <label>وصف الخدمة</label>
-  <textarea id="description" placeholder="اكتب تفاصيل خدمتك..." rows="3"></textarea>
-
+  <textarea id="serviceDescription" placeholder="اكتب تفاصيل خدمتك..." rows="3"></textarea>
   <button onclick="addService()">نشر الخدمة</button>
-  <button style="background:#eee;color:#333" onclick="closeModal()">إلغاء</button>
+  <button class="close-btn" onclick="closeModal()">إلغاء</button>
  </div>
 </div>
-
-<!-- نافذة الحسابات -->
-<div id="authModal">
- <div class="auth-box">
-  <h2 id="authTitle">إنشاء حساب جديد</h2>
-
-  <div id="registerFields">
-   <input id="regName" placeholder="الاسم الكامل">
-   <input id="regAddress" placeholder="العنوان">
-   <input id="regEmail" type="email" placeholder="البريد الإلكتروني">
-   <input id="regCountry" placeholder="بلد الإقامة">
-   <input id="regPhone" placeholder="رقم التواصل">
-   <input id="regPassword" type="password" placeholder="كلمة المرور">
-   <input id="regConfirm" type="password" placeholder="تأكيد كلمة المرور">
-  </div>
-
-  <div id="loginFields" style="display:none">
-   <input id="loginEmail" type="email" placeholder="البريد الإلكتروني">
-   <input id="loginPassword" type="password" placeholder="كلمة المرور">
-  </div>
-
-  <button id="authSubmit">إنشاء الحساب</button>
-  <p id="authMessage"></p>
-
-  <p style="text-align:center">
-   <a href="#" id="switchAuth">لديك حساب؟ تسجيل الدخول</a>
-  </p>
-
-  <button id="closeAuth" style="background:#eee;color:#333">إغلاق</button>
- </div>
-</div>
-
-<footer>© 2026 Python Market - جميع الحقوق محفوظة</footer>
 
 <script>
+/* بيانات مقدمي الخدمات */
 const providers = {
   0: [
     {name:"محمد منار الدايه",role:"ديزاينر",phone:"963934903925"},
@@ -199,40 +295,19 @@ const providers = {
   ]
 };
 
-/* الخدمات الأساسية */
+/* الخدمات الافتراضية */
 const defaultServices = [
- {name:"تصميم شعار احترافي",category:"تصميم",price:15,description:"تصميم شعار مميز لهويتك التجارية",icon:"🎨"},
- {name:"إنشاء موقع إلكتروني",category:"برمجة",price:50,description:"إنشاء موقع عصري ومتجاوب",icon:"💻"},
- {name:"كتابة مقالات حصرية",category:"كتابة",price:10,description:"كتابة محتوى عربي منسق",icon:"✍️"},
- {name:"إدارة صفحات التواصل",category:"تسويق",price:25,description:"إدارة حسابات التواصل الاجتماعي",icon:"📱"}
+ {id:"default-0",name:"تصميم شعار احترافي",category:"تصميم",price:15,description:"تصميم شعار مميز لهويتك التجارية",icon:"🎨",providerKey:0},
+ {id:"default-1",name:"إنشاء موقع إلكتروني",category:"برمجة",price:50,description:"إنشاء موقع عصري ومتجاوب",icon:"💻",providerKey:1},
+ {id:"default-2",name:"كتابة مقالات حصرية",category:"كتابة",price:10,description:"كتابة محتوى عربي منسق",icon:"✍️",providerKey:2},
+ {id:"default-3",name:"إدارة صفحات التواصل",category:"تسويق",price:25,description:"إدارة حسابات التواصل الاجتماعي",icon:"📱",providerKey:3}
 ];
 
-/* استرجاع الخدمات المحفوظة */
-let services = JSON.parse(
- localStorage.getItem("pythonMarketServices") || "null"
-) || [...defaultServices];
-
+let services=JSON.parse(localStorage.getItem("pythonMarketServices")||"null")||[...defaultServices];
 let selected="الكل";
 
-function render(){
- let q=document.getElementById("search").value.trim().toLowerCase();
-
- let list=services.map((s,index)=>({s,index})).filter(item=>
-  (selected==="الكل"||item.s.category===selected)&&
-  (item.s.name+" "+item.s.description+" "+item.s.category).toLowerCase().includes(q)
- );
-
- document.getElementById("cards").innerHTML=list.map(item=>`
- <article class="card">
-  <div class="cover">${escapeHTML(item.s.icon||"⭐")}</div>
-  <div class="info">
-   <span class="muted">${escapeHTML(item.s.category)}</span>
-   <h3>${escapeHTML(item.s.name)}</h3>
-   <p class="muted">${escapeHTML(item.s.description)}</p>
-   <div class="price">$${escapeHTML(item.s.price)}</div>
-   <button onclick="openProviders(${item.index})">اطلب الخدمة</button>
-  </div>
- </article>`).join("")||"<p>لا توجد خدمات مطابقة للبحث.</p>";
+function saveServices(){
+ localStorage.setItem("pythonMarketServices",JSON.stringify(services));
 }
 
 function escapeHTML(s){
@@ -241,29 +316,58 @@ function escapeHTML(s){
  }[c]));
 }
 
-function filter(c,b){
- selected=c;
- document.querySelectorAll(".categories button").forEach(x=>x.classList.remove("active"));
- b.classList.add("active");
+/* إظهار الخدمات */
+function render(){
+ const q=document.getElementById("search").value.trim().toLowerCase();
+
+ const list=services.filter(s=>
+  (selected==="الكل"||s.category===selected)&&
+  (s.name+" "+s.description+" "+s.category).toLowerCase().includes(q)
+ );
+
+ document.getElementById("cards").innerHTML=list.map(s=>`
+  <article class="card">
+   <div class="cover">${escapeHTML(s.icon||"⭐")}</div>
+   <div class="info">
+    <span class="muted">${escapeHTML(s.category)}</span>
+    <h3>${escapeHTML(s.name)}</h3>
+    <p class="muted">${escapeHTML(s.description)}</p>
+    <div class="price">$${escapeHTML(s.price)}</div>
+    <button onclick="openProviders('${escapeHTML(s.id)}')">اطلب الخدمة</button>
+   </div>
+  </article>
+ `).join("")||"<p>لا توجد خدمات مطابقة للبحث.</p>";
+}
+
+function filter(category,button){
+ selected=category;
+ document.querySelectorAll(".categories button").forEach(b=>b.classList.remove("active"));
+ button.classList.add("active");
  render();
 }
 
-function openProviders(index){
- const service=services[index];
- const list=providers[index]||[];
+/* عرض مقدمي الخدمة */
+function openProviders(serviceId){
+ const service=services.find(s=>s.id===serviceId);
+ if(!service)return;
+
+ const list=providers[service.providerKey]||[];
 
  document.getElementById("providerTitle").textContent=service.name;
- document.getElementById("providerList").innerHTML=list.map(p=>`
+
+ document.getElementById("providerList").innerHTML=list.length
+ ?list.map(p=>`
   <div class="provider-item">
    <div>
     <div class="provider-name">${escapeHTML(p.name)}</div>
     <div class="provider-role">${escapeHTML(p.role)}</div>
    </div>
    <a class="provider-whatsapp" href="https://wa.me/${p.phone}" target="_blank" rel="noopener">
-      تواصل عبر واتساب
+    تواصل عبر واتساب
    </a>
   </div>
- `).join("");
+ `).join("")
+ :"<p>سيتم إضافة مقدمي هذه الخدمة قريباً.</p>";
 
  document.getElementById("providerModal").style.display="flex";
 }
@@ -272,156 +376,198 @@ function closeProviders(){
  document.getElementById("providerModal").style.display="none";
 }
 
+/* إضافة خدمة */
 function openModal(){
- document.getElementById("modal").style.display="flex";
+ document.getElementById("serviceModal").style.display="flex";
 }
-
 function closeModal(){
- document.getElementById("modal").style.display="none";
+ document.getElementById("serviceModal").style.display="none";
 }
 
 function addService(){
- let name=document.getElementById("name").value.trim();
- let category=document.getElementById("category").value.trim();
- let price=Number(document.getElementById("price").value);
- let description=document.getElementById("description").value.trim();
+ const name=document.getElementById("serviceName").value.trim();
+ const category=document.getElementById("serviceCategory").value.trim();
+ const price=Number(document.getElementById("servicePrice").value);
+ const description=document.getElementById("serviceDescription").value.trim();
 
  if(!name||!category||!price||price<1||!description){
   alert("يرجى تعبئة جميع الحقول بشكل صحيح");
   return;
  }
 
- services.unshift({name,category,price,description,icon:"⭐"});
+ services.unshift({
+  id:"custom-"+Date.now(),
+  name,category,price,description,icon:"⭐",
+  providerKey:null
+ });
 
- /* حفظ القائمة بعد إضافة الخدمة */
- localStorage.setItem("pythonMarketServices", JSON.stringify(services));
-
+ saveServices();
  closeModal();
  render();
 
- document.getElementById("name").value="";
- document.getElementById("category").value="";
- document.getElementById("price").value="";
- document.getElementById("description").value="";
+ document.getElementById("serviceName").value="";
+ document.getElementById("serviceCategory").value="";
+ document.getElementById("servicePrice").value="";
+ document.getElementById("serviceDescription").value="";
 
  alert("تمت إضافة الخدمة وحفظها بنجاح");
 }
 
-/* تسجيل الدخول وإنشاء الحساب */
-(() => {
- const $ = id => document.getElementById(id);
- let registering = true;
+/* إدارة تسجيل الدخول والحسابات */
+const authPage=document.getElementById("authPage");
+const appPage=document.getElementById("appPage");
+const authMessage=document.getElementById("authMessage");
 
- window.openAuth = function(){
-  $("authModal").style.display="flex";
-  $("authMessage").textContent="";
- };
+function showApp(user){
+ authPage.classList.add("hidden");
+ appPage.classList.remove("hidden");
 
- function closeAuth(){
-  $("authModal").style.display="none";
+ document.getElementById("welcomeTitle").textContent=
+  "أهلاً وسهلاً بك "+user.name+" في Python Market! 👋";
+
+ document.getElementById("headerUser").textContent=user.name;
+ render();
+}
+
+function showLogin(){
+ appPage.classList.add("hidden");
+ authPage.classList.remove("hidden");
+ document.getElementById("loginForm").reset();
+ document.getElementById("registerForm").reset();
+ authMessage.textContent="";
+}
+
+function logout(){
+ localStorage.removeItem("pythonMarketCurrentUser");
+ showLogin();
+ window.scrollTo(0,0);
+}
+
+/* التبديل بين تسجيل الدخول وإنشاء الحساب */
+const loginTab=document.getElementById("loginTab");
+const registerTab=document.getElementById("registerTab");
+const loginForm=document.getElementById("loginForm");
+const registerForm=document.getElementById("registerForm");
+
+function switchTab(register){
+ loginForm.classList.toggle("hidden",register);
+ registerForm.classList.toggle("hidden",!register);
+ loginTab.classList.toggle("active",!register);
+ registerTab.classList.toggle("active",register);
+ authMessage.textContent="";
+}
+
+loginTab.onclick=()=>switchTab(false);
+registerTab.onclick=()=>switchTab(true);
+
+/* تشفير كلمة المرور */
+async function hashPassword(password,salt){
+ const key=await crypto.subtle.importKey(
+  "raw",new TextEncoder().encode(password),
+  "PBKDF2",false,["deriveBits"]
+ );
+
+ const result=await crypto.subtle.deriveBits({
+  name:"PBKDF2",
+  salt:new TextEncoder().encode(salt),
+  iterations:100000,
+  hash:"SHA-256"
+ },key,256);
+
+ return [...new Uint8Array(result)]
+  .map(x=>x.toString(16).padStart(2,"0")).join("");
+}
+
+/* إنشاء حساب */
+registerForm.addEventListener("submit",async function(e){
+ e.preventDefault();
+ authMessage.style.color="red";
+
+ const name=document.getElementById("regName").value.trim();
+ const address=document.getElementById("regAddress").value.trim();
+ const email=document.getElementById("regEmail").value.trim().toLowerCase();
+ const country=document.getElementById("regCountry").value.trim();
+ const phone=document.getElementById("regPhone").value.trim();
+ const password=document.getElementById("regPassword").value;
+ const confirm=document.getElementById("regConfirm").value;
+
+ if(password.length<8){
+  authMessage.textContent="كلمة المرور يجب أن تكون 8 أحرف على الأقل";
+  return;
  }
 
- $("closeAuth").onclick=closeAuth;
-
- $("switchAuth").onclick=e=>{
-  e.preventDefault();
-  registering=!registering;
-
-  $("registerFields").style.display=registering?"block":"none";
-  $("loginFields").style.display=registering?"none":"block";
-  $("authTitle").textContent=registering?"إنشاء حساب جديد":"تسجيل الدخول";
-  $("authSubmit").textContent=registering?"إنشاء الحساب":"دخول";
-  $("switchAuth").textContent=registering
-   ?"لديك حساب؟ تسجيل الدخول"
-   :"ليس لديك حساب؟ إنشاء حساب";
-  $("authMessage").textContent="";
- };
-
- async function hashPassword(password,salt){
-  const key=await crypto.subtle.importKey(
-   "raw",new TextEncoder().encode(password),
-   "PBKDF2",false,["deriveBits"]
-  );
-
-  const result=await crypto.subtle.deriveBits({
-   name:"PBKDF2",
-   salt:new TextEncoder().encode(salt),
-   iterations:100000,
-   hash:"SHA-256"
-  },key,256);
-
-  return [...new Uint8Array(result)]
-   .map(x=>x.toString(16).padStart(2,"0")).join("");
+ if(password!==confirm){
+  authMessage.textContent="كلمتا المرور غير متطابقتين";
+  return;
  }
 
- $("authSubmit").onclick=async()=>{
-  const msg=$("authMessage");
-  msg.style.color="red";
+ let users=JSON.parse(localStorage.getItem("pythonMarketUsers")||"[]");
 
-  let users=JSON.parse(localStorage.getItem("pythonMarketUsers")||"[]");
+ if(users.some(u=>u.email===email)){
+  authMessage.textContent="هذا البريد الإلكتروني مسجل مسبقاً";
+  return;
+ }
 
-  if(registering){
-   const name=$("regName").value.trim();
-   const address=$("regAddress").value.trim();
-   const email=$("regEmail").value.trim().toLowerCase();
-   const country=$("regCountry").value.trim();
-   const phone=$("regPhone").value.trim();
-   const password=$("regPassword").value;
-   const confirm=$("regConfirm").value;
+ try{
+  const salt=crypto.randomUUID();
+  const passwordHash=await hashPassword(password,salt);
 
-   if(!name||!address||!email||!country||!phone||!password||!confirm){
-    msg.textContent="يرجى تعبئة جميع الحقول";
-    return;
-   }
+  const user={name,address,email,country,phone,salt,passwordHash};
+  users.push(user);
 
-   if(password.length<8){
-    msg.textContent="كلمة المرور يجب أن تكون 8 أحرف على الأقل";
-    return;
-   }
+  localStorage.setItem("pythonMarketUsers",JSON.stringify(users));
 
-   if(password!==confirm){
-    msg.textContent="كلمتا المرور غير متطابقتين";
-    return;
-   }
+  const session={name,email};
+  localStorage.setItem("pythonMarketCurrentUser",JSON.stringify(session));
 
-   if(users.some(u=>u.email===email)){
-    msg.textContent="هذا البريد مسجل مسبقاً";
-    return;
-   }
+  showApp(session);
+ }catch(error){
+  authMessage.textContent="حدث خطأ، يرجى المحاولة مرة أخرى";
+ }
+});
 
-   const salt=crypto.randomUUID();
-   const passwordHash=await hashPassword(password,salt);
+/* تسجيل الدخول */
+loginForm.addEventListener("submit",async function(e){
+ e.preventDefault();
+ authMessage.style.color="red";
 
-   users.push({name,address,email,country,phone,salt,passwordHash});
-   localStorage.setItem("pythonMarketUsers",JSON.stringify(users));
+ const email=document.getElementById("loginEmail").value.trim().toLowerCase();
+ const password=document.getElementById("loginPassword").value;
 
-   msg.style.color="green";
-   msg.textContent="تم إنشاء الحساب بنجاح!";
+ const users=JSON.parse(localStorage.getItem("pythonMarketUsers")||"[]");
+ const user=users.find(u=>u.email===email);
 
-  }else{
-   const email=$("loginEmail").value.trim().toLowerCase();
-   const password=$("loginPassword").value;
-   const user=users.find(u=>u.email===email);
+ if(!user){
+  authMessage.textContent="البريد الإلكتروني أو كلمة المرور غير صحيحة";
+  return;
+ }
 
-   if(!user||await hashPassword(password,user.salt)!==user.passwordHash){
-    msg.textContent="البريد أو كلمة المرور غير صحيحة";
-    return;
-   }
+ try{
+  const passwordHash=await hashPassword(password,user.salt);
 
-   localStorage.setItem("pythonMarketCurrentUser",JSON.stringify({
-    name:user.name,
-    email:user.email
-   }));
-
-   msg.style.color="green";
-   msg.textContent="أهلاً "+user.name+"، تم تسجيل الدخول بنجاح!";
+  if(passwordHash!==user.passwordHash){
+   authMessage.textContent="البريد الإلكتروني أو كلمة المرور غير صحيحة";
+   return;
   }
- };
+
+  const session={name:user.name,email:user.email};
+  localStorage.setItem("pythonMarketCurrentUser",JSON.stringify(session));
+  showApp(session);
+ }catch(error){
+  authMessage.textContent="حدث خطأ، يرجى المحاولة مرة أخرى";
+ }
+});
+
+/* التحقق من الجلسة عند فتح الموقع */
+(function(){
+ const session=JSON.parse(localStorage.getItem("pythonMarketCurrentUser")||"null");
+
+ if(session&&session.name&&session.email){
+  showApp(session);
+ }else{
+  showLogin();
+ }
 })();
-
-/* عرض الخدمات عند فتح الموقع */
-render();
 </script>
-
 </body>
 </html>
