@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Market | سوق الخدمات الرقمية</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Tahoma,Arial,sans-serif;background:#f6f7fb;color:#20243a}
+header{background:#fff;padding:18px 7%;display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap;box-shadow:0 2px 12px #0000000b}
+.logo{font-size:25px;font-weight:bold;color:#6654db}
+.logo span{color:#20243a}
+nav a{margin:0 10px;color:#555;text-decoration:none;font-size:14px}
+button{border:0;border-radius:9px;padding:12px 18px;background:#6654db;color:white;font-weight:bold;cursor:pointer}
+button:hover{opacity:.88}
+.hero{background:linear-gradient(120deg,#29235f,#705ce8);color:white;text-align:center;padding:65px 20px}
+.hero h1{font-size:34px;margin:0 0 15px}
+.hero p{color:#e3dfff;font-size:17px}
+.search{max-width:600px;margin:25px auto 0;display:flex;background:white;border-radius:10px;padding:6px}
+.search input{flex:1;min-width:0;border:0;outline:0;padding:12px;font-size:15px}
+.container{max-width:1150px;margin:35px auto;padding:0 18px}
+h2{font-size:23px}
+.categories{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0}
+.categories button{background:#eeeaff;color:#5544bd}
+.categories button.active{background:#6654db;color:white}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
+.card{background:white;border-radius:13px;overflow:hidden;border:1px solid #eee;box-shadow:0 3px 12px #00000008}
+.cover{height:125px;background:linear-gradient(135deg,#e8e4ff,#d8efff);display:grid;place-items:center;font-size:42px}
+.info{padding:17px}
+.info h3{font-size:17px;line-height:1.6}
+.muted{color:#888;font-size:13px}
+.price{color:#6654db;font-weight:bold;font-size:19px}
+.card button{width:100%;margin-top:12px}
+footer{text-align:center;padding:30px;background:#24213e;color:#ddd;margin-top:55px}
+.modal{display:none;position:fixed;inset:0;background:#0009;align-items:center;justify-content:center;padding:15px}
+.modal-box{background:white;padding:25px;border-radius:15px;width:100%;max-width:430px}
+.modal input,.modal textarea{width:100%;padding:12px;margin:8px 0 15px;border:1px solid #ddd;border-radius:8px;font:inherit}
+</style>
+</head>
+<body>
+<header>
+ <div class="logo">Python <span>Market</span></div>
+ <nav><a href="#">الرئيسية</a><a href="#services">الخدمات</a><a href="#about">عن المنصة</a></nav>
+ <button onclick="alert('سيتم تفعيل تسجيل الحسابات بالمرحلة القادمة')">تسجيل الدخول</button>
+</header>
+
+<section class="hero">
+ <h1>كل الخدمات الرقمية بمكان واحد</h1>
+ <p>اكتشف المواهب، اعرض خدماتك، وابدأ رحلتك الرقمية معنا.</p>
+ <div class="search">
+  <input id="search" placeholder="ابحث عن الخدمة التي تريدها..." oninput="render()">
+  <button onclick="render()">بحث</button>
+ </div>
+</section>
+
+<main class="container" id="services">
+ <h2>تصفح الخدمات</h2>
+ <div class="categories">
+  <button class="active" onclick="filter('الكل',this)">الكل</button>
+  <button onclick="filter('تصميم',this)">التصميم</button>
+  <button onclick="filter('برمجة',this)">البرمجة</button>
+  <button onclick="filter('كتابة',this)">الكتابة والترجمة</button>
+  <button onclick="filter('تسويق',this)">التسويق</button>
+ </div>
+ <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:18px">
+  <span class="muted">خدمات متنوعة يقدمها المستقلون</span>
+  <button onclick="openModal()">+ أضف خدمتك</button>
+ </div>
+ <div class="cards" id="cards"></div>
+</main>
+
+<section class="container" id="about">
+ <h2>عن Python Market</h2>
+ <p style="line-height:2;color:#666">منصة تجمع أصحاب الخدمات الرقمية مع العملاء في مكان واحد، وتساعد المستقلين على عرض مهاراتهم والوصول إلى فرص جديدة.</p>
+</section>
+
+<div class="modal" id="modal">
+ <div class="modal-box">
+  <h2>إضافة خدمة جديدة</h2>
+  <label>اسم الخدمة</label>
+  <input id="name" placeholder="مثلاً: تصميم شعار احترافي">
+  <label>التصنيف</label>
+  <input id="category" placeholder="تصميم أو برمجة أو كتابة أو تسويق">
+  <label>السعر بالدولار</label>
+  <input id="price" type="number" min="1" placeholder="مثلاً 10">
+  <label>وصف الخدمة</label>
+  <textarea id="description" placeholder="اكتب تفاصيل خدمتك..." rows="3"></textarea>
+  <button onclick="addService()">نشر الخدمة</button>
+  <button style="background:#eee;color:#333" onclick="closeModal()">إلغاء</button>
+ </div>
+</div>
+
+<footer>© 2026 Python Market - جميع الحقوق محفوظة</footer>
+
+<script>
+let services=[
+ {name:"تصميم شعار احترافي",category:"تصميم",price:15,description:"تصميم شعار مميز لهويتك التجارية",icon:"🎨"},
+ {name:"إنشاء موقع إلكتروني",category:"برمجة",price:50,description:"إنشاء موقع عصري ومتجاوب",icon:"💻"},
+ {name:"كتابة مقالات حصرية",category:"كتابة",price:10,description:"كتابة محتوى عربي منسق",icon:"✍️"},
+ {name:"إدارة صفحات التواصل",category:"تسويق",price:25,description:"إدارة حسابات التواصل الاجتماعي",icon:"📱"}
+];
+let selected="الكل";
+function render(){
+ let q=document.getElementById("search").value.trim().toLowerCase();
+ let list=services.filter(s=>(selected==="الكل"||s.category===selected)&&(s.name+" "+s.description+" "+s.category).toLowerCase().includes(q));
+ document.getElementById("cards").innerHTML=list.map(s=>`
+ <article class="card">
+  <div class="cover">${s.icon||"⭐"}</div>
+  <div class="info">
+   <span class="muted">${s.category}</span>
+   <h3>${escapeHTML(s.name)}</h3>
+   <p class="muted">${escapeHTML(s.description)}</p>
+   <div class="price">$${s.price}</div>
+   <button onclick="alert('سيتم تفعيل طلب الخدمات في المرحلة القادمة')">اطلب الخدمة</button>
+  </div>
+ </article>`).join("")||"<p>لا توجد خدمات مطابقة للبحث.</p>";
+}
+function escapeHTML(s){
+ return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+function filter(c,b){
+ selected=c;
+ document.querySelectorAll(".categories button").forEach(x=>x.classList.remove("active"));
+ b.classList.add("active");render();
+}
+function openModal(){document.getElementById("modal").style.display="flex"}
+function closeModal(){document.getElementById("modal").style.display="none"}
+function addService(){
+ let name=document.getElementById("name").value.trim();
+ let category=document.getElementById("category").value.trim();
+ let price=Number(document.getElementById("price").value);
+ let description=document.getElementById("description").value.trim();
+ if(!name||!category||!price||price<1||!description){alert("يرجى تعبئة جميع الحقول بشكل صحيح");return}
+ services.unshift({name,category,price,description,icon:"⭐"});
+ closeModal();render();
+ alert("تمت إضافة الخدمة إلى المعاينة بنجاح");
+}
+render();
+</script>
+</body>
+</html>
